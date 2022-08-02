@@ -1,15 +1,21 @@
 import pandas as pd
 from user_account import UserAccount
+
 class Atm:
     def __init(self, total_money:float=10000):
         self.total_money = total_money
-        self.user_accounts = set()
+        self.user_accounts = {}
         self.current_account:UserAccount = None
     
-    def set_current_account(self, account_id):
-        if self.current_account != None:
-            raise Exception('Should only set current_account after log out!')
-        self.current_account = self.users_accounts.get(account_id)
+
+    def authorize(self, account_id, pin):
+        authorize = False
+        actual_pin:UserAccount = self.user_accounts.get(account_id)
+        if actual_pin != None and actual_pin.pin == pin:
+            print(account_id + ' successfully authorized.')
+            self.current_account = actual_pin
+        else:
+            print('Authorization failed.')
     
     # update user_account details
     # set current_account to None
@@ -23,7 +29,7 @@ class Atm:
     
     def withdraw(self, value):
         if self.current_account == None:
-            raise Exception('Need to authorize first!')
+            print('Authorization required.')
         elif self.current_account.overdrawn:
             print('Your account is overdrawn! You may not make a withdrawal at this time.')
             return
@@ -45,7 +51,7 @@ class Atm:
     
     def deposit(self, value):
         if self.current_account == None:
-            raise Exception('Need to authorize first!')
+            print('Authorization required.')
         
         # update the balance for account
         self.current_account.deposit(value)
@@ -54,13 +60,13 @@ class Atm:
     
     def balance(self):
         if self.current_account == None:
-            raise Exception('Need to authorize first!')
+            print('Authorization required.')
     
         self.current_account.show_balance()
     
     def history(self):
         if self.current_account == None:
-            raise Exception('Need to authorize first!')
+            print('Authorization required.')
         self.current_account.history()
     
     def parse_user_accounts(self, file_name):
@@ -68,5 +74,4 @@ class Atm:
         # go there each row and add the UserAccount
         for account in df.to_dict(orient='list'):
             self.user_accounts.add(UserAccount(account))
-        
         

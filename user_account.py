@@ -43,4 +43,4 @@ class UserAccount:
         if len(self.history) == 0:
             print('No history found')
         else:
-            print(list(map(show_history, self.history)))
+            print(list(map(self.history)))

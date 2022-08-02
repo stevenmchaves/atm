@@ -6,7 +6,8 @@ class UserAccount:
 
     def __init__(self, account, overdrawn=False):
         self.account_id = int(account['ACCOUNT_ID'])
-        self.pin = int(account['PIN'])
+        # because of the possibility of leading zeros needs to be string
+        self.pin = account['PIN']
         self.balance = float(account['BALANCE'])
         self.overdrawn = overdrawn
         self.account_history = []

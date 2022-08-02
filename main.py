@@ -39,9 +39,13 @@ def main():
         command = command_syntax[0]
         
         if command.lower() == "authorize":
-            print(command_syntax[1])
-            print(command_syntax[2])
-            atm.authorize(command_syntax[1], command_syntax[2])
+            if len(command_syntax) == 3:
+                print(command_syntax[1])
+                print(command_syntax[2])
+                atm.authorize(command_syntax[1], command_syntax[2])
+            else:
+                print('Missing additional parameters for authorize.\nProper syntax:\n')
+                print('authorize <account_id> <pin>')
         elif command.lower() == "logout":
             atm.log_out()
         elif command.lower() == "deposit":

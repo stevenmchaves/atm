@@ -8,7 +8,7 @@ class Atm:
         self.current_account:UserAccount = None
     
 
-    def authorize(self, account_id:int, pin:int):
+    def authorize(self, account_id:int, pin):
         if account_id in self.user_accounts.keys():
             actual_pin = self.user_accounts.get(account_id)
             print(actual_pin)
@@ -17,7 +17,8 @@ class Atm:
                 self.current_account = actual_pin
             else:
                 print('Authorization failed.')
-    
+        else:
+            print('Account Not Found. Authorization failed.')
     # update user_account details
     # set current_account to None
     def log_out(self):
@@ -62,8 +63,8 @@ class Atm:
     def balance(self):
         if self.current_account == None:
             print('Authorization required.')
-    
-        self.current_account.show_balance()
+        else:
+            self.current_account.show_balance()
     
     def history(self):
         if self.current_account == None:

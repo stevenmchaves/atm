@@ -1,3 +1,4 @@
+import pandas as pd
 from user_account import UserAccount
 class Atm:
     def __init(self, total_money:float=10000):
@@ -13,8 +14,12 @@ class Atm:
     # update user_account details
     # set current_account to None
     def log_out(self):
-        self.user_accounts.add(self.current_account)
-        self.current_account = None
+        if self.current_account is None:
+            print('No account is currently authorized.')
+        else:
+            self.user_accounts.add(self.current_account)
+            print('Account ' + self.current_account.account_id + ' logged out.')
+            self.current_account = None
     
     def withdraw(self, value):
         if self.current_account == None:
@@ -57,3 +62,11 @@ class Atm:
         if self.current_account == None:
             raise Exception('Need to authorize first!')
         self.current_account.history()
+    
+    def parse_user_accounts(self, file_name):
+        df = pd.read_csv(file_name)
+        # go there each row and add the UserAccount
+        for account in df.to_dict(orient='list'):
+            self.user_accounts.add(UserAccount(account))
+        
+        

@@ -1,12 +1,13 @@
-from account_history import show_history
+import datetime
+from account_history import show_history, AccountHistory
 # Class to describe User Account details
 OVERDRAFT_FEE = 5
 class UserAccount:
 
-    def __init__(self, account_id:str, pin:int, balance:float, overdrawn=False):
-        self.account_id = account_id
-        self.pin = pin
-        self.balance = balance
+    def __init__(self, account, overdrawn=False):
+        self.account_id = account['account_id']
+        self.pin = account['pin']
+        self.balance = account['balance']
         self.overdrawn = overdrawn
         self.account_history = []
     
@@ -23,7 +24,6 @@ class UserAccount:
             self.overdrawn = True
             applyFee = True
         print('Amount dispensed: ${amount}')
-        
         # apply overdraft fee
         if applyFee:
             print('You have been charged an overdraft charge of ${OVERDRAFT_FEE}')
@@ -31,11 +31,13 @@ class UserAccount:
         
         # update balance
         self.balance -= amount
+        self.account_history.append(AccountHistory(datetime.datetime.now(), -abs(amount), self.balance))
         
         
     def deposit(self, amount):
         # update balance
         self.balance += amount
+        self.account_history.append(AccountHistory(datetime.datetime.now(), amount, self.balance))
     
     def history(self):
         if len(self.history) == 0:

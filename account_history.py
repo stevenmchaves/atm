@@ -6,5 +6,5 @@ class AccountHistory:
         self.balance = balance
 
     def __str__(self):
-        return self.date_time.x.strftime("%Y-%m-%d %H:%M:%S") + ' ${0.2f} ${0.2f}', self.amount, self.balance
+        return self.date_time.strftime("%Y-%m-%d %H:%M:%S") + " ${0.2f} ${0.2f}".format(self.amount, self.balance)
         

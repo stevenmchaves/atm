@@ -1,36 +1,41 @@
 import datetime
+import logging
 from account_history import AccountHistory
 # Class to describe User Account details
 OVERDRAFT_FEE = 5
+
+logger = logging.getLogger(__name__)
 class UserAccount:
 
     def __init__(self, account, overdrawn=False):
-        self.account_id = int(account['ACCOUNT_ID'])
+        self.account_id = str(int(account['ACCOUNT_ID']))
         # because of the possibility of leading zeros needs to be string
-        self.pin = account['PIN']
+        self.pin = str(account['PIN'])
         self.balance = float(account['BALANCE'])
         self.overdrawn = overdrawn
         self.account_history = []
     
     def __str__(self):
-        return str(self.account_id) + ' **** ' + str(self.balance) + ' overdrawn=' + str(self.overdrawn)
+        return '"' + self.account_id + '" "' + str(self.pin) + '" ' + str(self.balance) + ' overdrawn=' + str(self.overdrawn)
     
     
-    def show_balance(self):    
-        print('Current balance: ${0.2f}', self.balance)
+    def show_balance(self): 
+        out = "Current balance: ${:.2f}".format(self.balance) 
+        print(out)  
+        logger.debug(out)
     
-    def withdraw(self, amount):
+    def withdraw(self, amount:float):
         applyFee = False
         if self.overdrawn:
-            print('Your account is overdrawn! You may not make a withdrawal at this time.')
+            logger.info('Your account is overdrawn! You may not make a withdrawal at this time.')
             return  
         elif self.balance < amount:
             self.overdrawn = True
             applyFee = True
-        print('Amount dispensed: ${amount}')
+        logger.info('Amount dispensed: ${amount}')
         # apply overdraft fee
         if applyFee:
-            print('You have been charged an overdraft charge of ${OVERDRAFT_FEE}')
+            logger.info('You have been charged an overdraft charge of ${OVERDRAFT_FEE}')
             amount += OVERDRAFT_FEE
         
         # update balance
@@ -44,7 +49,8 @@ class UserAccount:
         self.account_history.append(AccountHistory(datetime.datetime.now(), amount, self.balance))
     
     def history(self):
-        if len(self.history) == 0:
-            print('No history found')
+        if len(self.account_history) == 0:
+            logger.info('No history found')
         else:
-            print(list(map(self.history)))
+            for record in reversed(self.account_history):
+                logger.info(record)

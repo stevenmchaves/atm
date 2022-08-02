@@ -1,5 +1,5 @@
 #!/usr/bin/python
-
+import logging
 import signal
 from prompt_toolkit import prompt
 
@@ -7,11 +7,13 @@ from atm import Atm
 
 TIMEOUT = 120 # number of seconds (2 minutes)
 
+logging.basicConfig(level = logging.DEBUG,format = '[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s')
+
 atm: Atm = Atm()
     
 def logout_timeout(signum, frame):
     #called when read times out
-    print('Logging out of account id: ' + atm.current_account.account_id)
+    logging.info('Logging out of account id: ' + atm.current_account.account_id)
     atm.log_out()
 
 signal.signal(signal.SIGALRM, logout_timeout)
@@ -40,12 +42,10 @@ def main():
         
         if command.lower() == "authorize":
             if len(command_syntax) == 3:
-                print(command_syntax[1])
-                print(command_syntax[2])
                 atm.authorize(command_syntax[1], command_syntax[2])
             else:
-                print('Missing additional parameters for authorize.\nProper syntax:\n')
-                print('authorize <account_id> <pin>')
+                logging.info('Missing additional parameters for authorize.\nProper syntax:\n')
+                logging.info('authorize <account_id> <pin>')
         elif command.lower() == "logout":
             atm.log_out()
         elif command.lower() == "deposit":
@@ -60,7 +60,7 @@ def main():
             # exit loop to end program
             break
         else:
-            print("Not a valid command.")
+            logging.info("Not a valid command.")
         
 
 

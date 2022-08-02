@@ -1,15 +1,18 @@
 import datetime
-from account_history import show_history, AccountHistory
+from account_history import AccountHistory
 # Class to describe User Account details
 OVERDRAFT_FEE = 5
 class UserAccount:
 
     def __init__(self, account, overdrawn=False):
-        self.account_id = account['account_id']
-        self.pin = account['pin']
-        self.balance = account['balance']
+        self.account_id = int(account['ACCOUNT_ID'])
+        self.pin = int(account['PIN'])
+        self.balance = float(account['BALANCE'])
         self.overdrawn = overdrawn
         self.account_history = []
+    
+    def __str__(self):
+        return str(self.account_id) + ' **** ' + str(self.balance) + ' overdrawn=' + str(self.overdrawn)
     
     
     def show_balance(self):    

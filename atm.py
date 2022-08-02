@@ -2,20 +2,21 @@ import pandas as pd
 from user_account import UserAccount
 
 class Atm:
-    def __init(self, total_money:float=10000):
+    def __init__(self, total_money:float=10000):
         self.total_money = total_money
         self.user_accounts = {}
         self.current_account:UserAccount = None
     
 
-    def authorize(self, account_id, pin):
-        authorize = False
-        actual_pin:UserAccount = self.user_accounts.get(account_id)
-        if actual_pin != None and actual_pin.pin == pin:
-            print(account_id + ' successfully authorized.')
-            self.current_account = actual_pin
-        else:
-            print('Authorization failed.')
+    def authorize(self, account_id:int, pin:int):
+        if account_id in self.user_accounts.keys():
+            actual_pin = self.user_accounts.get(account_id)
+            print(actual_pin)
+            if actual_pin != None and actual_pin.pin == pin:
+                print(account_id + ' successfully authorized.')
+                self.current_account = actual_pin
+            else:
+                print('Authorization failed.')
     
     # update user_account details
     # set current_account to None
@@ -72,6 +73,9 @@ class Atm:
     def parse_user_accounts(self, file_name):
         df = pd.read_csv(file_name)
         # go there each row and add the UserAccount
-        for account in df.to_dict(orient='list'):
-            self.user_accounts.add(UserAccount(account))
+        print(df)
+        for index, row in df.iterrows():
+            tempAccount = UserAccount(row)
+            print(tempAccount)
+            self.user_accounts.update({tempAccount.account_id: tempAccount})
         

@@ -7,7 +7,6 @@ local_atm = Atm()
 
 local_atm_diff = Atm(5000)
 
-    
 def invalid_test_atm():
     with pytest.raises(TypeError):
         Atm({})
@@ -25,7 +24,96 @@ def test_authorize_no_accounts(capsys):
     local_atm.authorize('2222', '2222')
     assert 'Account Not Found. Authorization failed.\n' in capsys.readouterr()
 
-def test_user_account_invalid_pin(capsys):
+def test_authorize_invalid_pin(capsys):
     local_atm.parse_user_accounts('sample_accounts.csv')
     local_atm.authorize("2001377812", '2222')
-    assert 'Account Not Found. Authorization failed.' in capsys.readouterr()   
+    assert 'Authorization failed.\n' in capsys.readouterr()   
+
+def test_authorize(capsys):
+    local_atm.parse_user_accounts('sample_accounts.csv')
+    local_atm.authorize("2001377812", '5950')
+    assert '2001377812 successfully authorized.\n' in capsys.readouterr()  
+
+def test_logout_authorize(capsys):
+    temp_local_atm = Atm()
+    temp_local_atm.parse_user_accounts('sample_accounts.csv')
+    temp_local_atm.authorize("2001377812", '5950')
+    temp_local_atm.log_out()
+    assert 'Account 2001377812 logged out.' in str(capsys.readouterr())
+    
+def test_logout_no_authorize(capsys):
+    temp_local_atm = Atm()
+    temp_local_atm.log_out()
+    assert 'No account is currently authorized.\n' in capsys.readouterr()
+
+def test_history_no_authorize(capsys):
+    temp_local_atm = Atm()
+    temp_local_atm.history()
+    assert 'Authorization required.\n' in capsys.readouterr()
+
+def test_history_no(capsys):
+    temp_local_atm = Atm()
+    temp_local_atm.parse_user_accounts('sample_accounts.csv')
+    temp_local_atm.authorize("2001377812", '5950')
+    temp_local_atm.history()
+    assert 'No history found' in str(capsys.readouterr())
+    
+def test_history(capsys):
+    temp_local_atm = Atm()
+    temp_local_atm.parse_user_accounts('sample_accounts.csv')
+    temp_local_atm.authorize("2001377812", '5950')
+    temp_local_atm.withdraw(40)
+    temp_local_atm.history()
+    assert '$-40.00 $20.00' in str(capsys.readouterr())
+
+def test_withdraw_no_authorize(capsys):
+    temp_local_atm = Atm()
+    temp_local_atm.withdraw(4)
+    assert 'Authorization required.\n' in capsys.readouterr()
+
+def test_deposit_no_authorize(capsys):
+    temp_local_atm = Atm()
+    temp_local_atm.deposit(12)
+    assert 'Authorization required.\n' in capsys.readouterr()
+
+def test_balance_no_authorize(capsys):
+    temp_local_atm = Atm()
+    temp_local_atm.balance()
+    assert 'Authorization required.\n' in capsys.readouterr()
+    
+def test_withdraw_invalid_multiple(capsys):
+    temp_local_atm = Atm()
+    temp_local_atm.parse_user_accounts('sample_accounts.csv')
+    temp_local_atm.authorize("2001377812", '5950')
+    temp_local_atm.withdraw(10)
+    assert 'Withdrawal amount must be a multiple of $20.' in str(capsys.readouterr())
+
+def test_withdraw_invalid_amount(capsys):
+    temp_local_atm = Atm()
+    temp_local_atm.parse_user_accounts('sample_accounts.csv')
+    temp_local_atm.authorize("2001377812", '5950')
+    with pytest.raises(ValueError):
+        temp_local_atm.withdraw('A10')
+
+def test_deposit_invalid_amount(capsys):
+    temp_local_atm = Atm()
+    temp_local_atm.parse_user_accounts('sample_accounts.csv')
+    temp_local_atm.authorize("2001377812", '5950')
+    with pytest.raises(ValueError):
+        temp_local_atm.deposit('A10')
+    
+def test_deposit_negative_amount(capsys):
+    temp_local_atm = Atm()
+    temp_local_atm.parse_user_accounts('sample_accounts.csv')
+    temp_local_atm.authorize("2001377812", '5950')
+    temp_local_atm.deposit(-10)
+    assert 'Deposit amount needs to be greater than 0.' in str(capsys.readouterr())
+
+
+def test_balance(capsys):
+    temp_local_atm = Atm()
+    temp_local_atm.parse_user_accounts('sample_accounts.csv')
+    temp_local_atm.authorize("2001377812", '5950')
+    temp_local_atm.withdraw(40)
+    temp_local_atm.balance()
+    assert 'Current balance: $20.00' in str(capsys.readouterr())

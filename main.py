@@ -1,9 +1,9 @@
 #!/usr/bin/python
 import logging
 import signal
-from prompt_toolkit import prompt
+#from prompt_toolkit import prompt
 
-from atm import Atm
+from atm.app import Atm
 
 TIMEOUT = 120 # number of seconds (2 minutes)
 
@@ -23,7 +23,7 @@ def timeout_input():
         return command
         
 def main():
-    atm.parse_user_accounts('/home/stevenmchaves/atm/sample_accounts.csv')
+    atm.parse_user_accounts('sample_accounts.csv')
     command: str = None
     while 1:
         # set alarm
@@ -62,7 +62,6 @@ def main():
         else:
             logging.info("Not a valid command.")
         
-
 
 if __name__ == "__main__":
     main()

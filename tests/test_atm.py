@@ -88,12 +88,36 @@ def test_withdraw_invalid_multiple(capsys):
     temp_local_atm.withdraw(10)
     assert 'Withdrawal amount must be a multiple of $20.' in str(capsys.readouterr())
 
-def test_withdraw_invalid_amount(capsys):
+def test_withdraw_invalid_amount():
     temp_local_atm = Atm()
     temp_local_atm.parse_user_accounts('sample_accounts.csv')
     temp_local_atm.authorize("2001377812", '5950')
     with pytest.raises(ValueError):
         temp_local_atm.withdraw('A10')
+
+def test_withdraw_too_much(capsys):
+    temp_local_atm = Atm()
+    temp_local_atm.parse_user_accounts('sample_accounts.csv')
+    temp_local_atm.authorize("2001377812", '5950')
+    temp_local_atm.withdraw('20000')
+    stdout_err = str(capsys.readouterr())
+    assert 'Unable to dispense full amount requested at this time.' in stdout_err
+    assert 'Amount dispensed: $10000' in stdout_err
+    assert 'Amount dispensed: $20000' not in stdout_err
+    
+def test_withdraw_out_of_money(capsys):
+    temp_local_atm = Atm()
+    temp_local_atm.parse_user_accounts('sample_accounts.csv')
+    temp_local_atm.authorize("1434597300", '4557')
+    temp_local_atm.withdraw('10000')
+    temp_local_atm.log_out()
+    stdout_err = str(capsys.readouterr())
+    assert 'Amount dispensed: $10000' in stdout_err
+    temp_local_atm.authorize("2001377812", '5950')
+    temp_local_atm.withdraw('20')
+    stdout_err = str(capsys.readouterr())
+    assert 'Unable to process your withdrawal at this time.' in stdout_err
+    assert 'Amount dispensed: $20' not in stdout_err
 
 def test_deposit_invalid_amount(capsys):
     temp_local_atm = Atm()

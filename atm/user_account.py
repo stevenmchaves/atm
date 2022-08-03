@@ -33,8 +33,7 @@ class UserAccount:
         elif self.balance < amount:
             self.overdrawn = True
             applyFee = True
-        logger.info('Amount dispensed: $' + str(amount))
-        print('Amount dispensed: $' + str(amount))
+        print('Amount dispensed: $' + str(int(amount)))
         # apply overdraft fee
         if applyFee:
             logger.info('You have been charged an overdraft charge of $' + str(OVERDRAFT_FEE))

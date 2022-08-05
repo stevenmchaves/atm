@@ -22,17 +22,17 @@ def test_atm():
 
 def test_authorize_no_accounts(capsys):
     local_atm.authorize('2222', '2222')
-    assert 'Account Not Found. Authorization failed.\n' in capsys.readouterr()
+    assert 'Account Not Found. Authorization failed.' in str(capsys.readouterr())
 
 def test_authorize_invalid_pin(capsys):
     local_atm.parse_user_accounts('sample_accounts.csv')
     local_atm.authorize("2001377812", '2222')
-    assert 'Authorization failed.\n' in capsys.readouterr()   
+    assert 'Authorization failed.' in str(capsys.readouterr())   
 
 def test_authorize(capsys):
     local_atm.parse_user_accounts('sample_accounts.csv')
     local_atm.authorize("2001377812", '5950')
-    assert '2001377812 successfully authorized.\n' in capsys.readouterr()  
+    assert '2001377812 successfully authorized.' in str(capsys.readouterr())  
 
 def test_logout_authorize(capsys):
     temp_local_atm = Atm()
@@ -44,12 +44,12 @@ def test_logout_authorize(capsys):
 def test_logout_no_authorize(capsys):
     temp_local_atm = Atm()
     temp_local_atm.log_out()
-    assert 'No account is currently authorized.\n' in capsys.readouterr()
+    assert 'No account is currently authorized.' in str(capsys.readouterr())
 
 def test_history_no_authorize(capsys):
     temp_local_atm = Atm()
     temp_local_atm.history()
-    assert 'Authorization required.\n' in capsys.readouterr()
+    assert 'Authorization required.' in str(capsys.readouterr())
 
 def test_history_no(capsys):
     temp_local_atm = Atm()
@@ -69,17 +69,17 @@ def test_history(capsys):
 def test_withdraw_no_authorize(capsys):
     temp_local_atm = Atm()
     temp_local_atm.withdraw(4)
-    assert 'Authorization required.\n' in capsys.readouterr()
+    assert 'Authorization required.' in str(capsys.readouterr())
 
 def test_deposit_no_authorize(capsys):
     temp_local_atm = Atm()
     temp_local_atm.deposit(12)
-    assert 'Authorization required.\n' in capsys.readouterr()
+    assert 'Authorization required.' in str(capsys.readouterr())
 
 def test_balance_no_authorize(capsys):
     temp_local_atm = Atm()
     temp_local_atm.balance()
-    assert 'Authorization required.\n' in capsys.readouterr()
+    assert 'Authorization required.' in str(capsys.readouterr())
     
 def test_withdraw_invalid_multiple(capsys):
     temp_local_atm = Atm()

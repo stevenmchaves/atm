@@ -1,9 +1,5 @@
-import logging
-from operator import contains
 import pytest
 from atm.user_account import UserAccount, OVERDRAFT_FEE
-
-LOGGER = logging.getLogger(__name__)
 
 user_account = UserAccount({'ACCOUNT_ID': '1234', 'PIN': '5678', 'BALANCE': '0.00'})
     

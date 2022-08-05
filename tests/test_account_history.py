@@ -24,5 +24,5 @@ def test_account_history_negative():
 
 def test_account_history_print(capsys):
     print(account_history)
-    expected_out = now_datetime.strftime("%Y-%m-%d %H:%M:%S")  + ' $5.00 $500.00\n'
-    assert expected_out in capsys.readouterr()
+    expected_out = now_datetime.strftime("%Y-%m-%d %H:%M:%S")  + ' $5.00 $500.00'
+    assert expected_out in str(capsys.readouterr())

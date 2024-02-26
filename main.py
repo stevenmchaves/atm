@@ -19,8 +19,8 @@ def logout_timeout(signum, frame):
 signal.signal(signal.SIGALRM, logout_timeout)
 
 def timeout_input():
-        command = input("\nEnter ATM operation:\n")
-        return command
+    command = input("\nEnter ATM operation:\n")
+    return command
         
 def main():
     atm.parse_user_accounts('sample_accounts.csv')

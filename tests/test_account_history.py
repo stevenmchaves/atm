@@ -22,7 +22,7 @@ def test_account_history_negative():
     assert account_history_negative.balance == -500
     assert account_history_negative.date_time == now_datetime
 
-def test_account_history_print(capsys):
+def test_account_history_print(capsys: pytest.CaptureFixture[str]):
     print(account_history)
     expected_out = now_datetime.strftime("%Y-%m-%d %H:%M:%S")  + ' $5.00 $500.00'
     assert expected_out in str(capsys.readouterr())

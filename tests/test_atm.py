@@ -64,7 +64,7 @@ def test_history(capsys):
     temp_local_atm.authorize("2001377812", '5950')
     temp_local_atm.withdraw(40)
     temp_local_atm.history()
-    assert '$-40.00 $20.00' in str(capsys.readouterr())
+    assert '-$40.00 $20.00' in str(capsys.readouterr())
 
 def test_withdraw_no_authorize(capsys):
     temp_local_atm = Atm()

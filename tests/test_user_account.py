@@ -28,7 +28,7 @@ def test_show_balance_negative(capsys):
     temp_user_account.withdraw(20)
     temp_user_account.overdrawn == True
     temp_user_account.show_balance()
-    assert 'Current balance: $-25.00' in str(capsys.readouterr()) 
+    assert 'Current balance: -$25.00' in str(capsys.readouterr()) 
 
 
 def test_withdrawal_prevent(capsys):
@@ -72,4 +72,4 @@ def test_history_two(capsys):
     temp_user_account.history()
     stdouterr = str(capsys.readouterr())
     assert '$30.00 $30.00' in stdouterr
-    assert '$-20.00 $10.00' in stdouterr 
+    assert '-$20.00 $10.00' in stdouterr 

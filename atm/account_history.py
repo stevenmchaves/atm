@@ -5,5 +5,6 @@ class AccountHistory:
         self.balance = balance
 
     def __str__(self):
-        return self.date_time.strftime("%Y-%m-%d %H:%M:%S") + " ${:.2f} ${:.2f}".format(self.amount, self.balance)
+        str_amount = " -$" if self.amount < 0 else " $"
+        return self.date_time.strftime("%Y-%m-%d %H:%M:%S") + str_amount  + '{:.2f}'.format(self.amount).lstrip("-") + " ${:.2f}".format(self.balance)
         

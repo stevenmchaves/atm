@@ -19,8 +19,9 @@ class UserAccount:
         return '"' + self.account_id + '" "' + str(self.pin) + '" ' + str(self.balance) + ' overdrawn=' + str(self.overdrawn)
     
     
-    def show_balance(self): 
-        out = "Current balance: ${:.2f}".format(self.balance) 
+    def show_balance(self):
+        str_sign_balance = "-$" if self.balance < 0 else "$"
+        out = "Current balance: " + str_sign_balance  + "{:.2f}".format(self.balance).lstrip("-") 
         print(out)  
         logger.debug(out)
     
@@ -45,7 +46,7 @@ class UserAccount:
         self.account_history.append(AccountHistory(datetime.datetime.now(), -abs(amount), self.balance))
         
         
-    def deposit(self, amount):
+    def deposit(self, amount: float):
         # update balance
         self.balance += amount
         self.account_history.append(AccountHistory(datetime.datetime.now(), amount, self.balance))

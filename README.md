@@ -9,8 +9,10 @@ Create new `venv`
     python3 -m venv venv
 
 Activate `venv`
-
+    # Linux / MacOS
     source venv/bin/activate
+    # Windows
+    .\venv\Scripts\activate.bat
 
 Install requirements
 

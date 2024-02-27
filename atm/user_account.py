@@ -24,6 +24,7 @@ class UserAccount:
         out = "Current balance: " + str_sign_balance  + "{:.2f}".format(self.balance).lstrip("-") 
         print(out)  
         logger.debug(out)
+        return out
     
     def withdraw(self, amount:float):
         applyFee = False
@@ -54,8 +55,12 @@ class UserAccount:
     def history(self):
         if len(self.account_history) == 0:
             logger.info('No history found')
-            print('No history found')
+            return 'No history found'
         else:
+            records = ""
             for record in reversed(self.account_history):
                 logger.info(record)
                 print(record)
+                record += "\n"
+                records += record
+            return records

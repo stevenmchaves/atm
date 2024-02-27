@@ -1,68 +1,51 @@
 # Following code was generated from Microsoft Copilot
 # I provided atm.py as a started point until it reached the 2000 characters
-
 from flask import Flask, jsonify, request
+import logging
+import pandas as pd
 
+from atm.user_account import UserAccount  # Assuming you have the UserAccount class defined
+from atm.app import Atm
+
+logger = logging.getLogger(__name__)
 app = Flask(__name__)
 
-class UserAccount:
-    def __init__(self, account_id, pin):
-        self.account_id = account_id
-        self.pin = pin
-        # Add any other necessary attributes for user accounts
 
 # Initialize ATM
-total_money = 10000
-user_accounts = {}
-current_account = None
+atm_instance = Atm()
 
 @app.route('/authorize', methods=['POST'])
 def authorize():
     data = request.get_json()
     account_id = data.get('account_id')
     pin = data.get('pin')
-
-    if account_id in user_accounts:
-        actual_pin = user_accounts.get(account_id)
-        if actual_pin is not None and actual_pin.pin == pin:
-            global current_account
-            current_account = actual_pin
-            return jsonify({'message': f'Account {account_id} successfully authorized.'}), 200
-        else:
-            return jsonify({'message': 'Authorization failed.'}), 401
-    else:
-        return jsonify({'message': 'Account Not Found. Authorization failed.'}), 404
+    return atm_instance.authorize(account_id, pin)           
 
 @app.route('/logout', methods=['POST'])
 def log_out():
-    global current_account
-    if current_account is None:
-        return jsonify({'message': 'No account is currently authorized.'}), 401
-    else:
-        user_accounts[current_account.account_id] = current_account
-        current_account = None
-        return jsonify({'message': f'Account {current_account.account_id} logged out.'}), 200
+    return atm_instance.log_out()
 
 @app.route('/withdraw', methods=['POST'])
 def withdraw():
     data = request.get_json()
     value = float(data.get('value'))
+    return atm_instance.withdraw(value)
 
-    if current_account is None:
-        return jsonify({'message': 'Authorization required.'}), 401
-    elif total_money == 0:
-        return jsonify({'message': 'Unable to process your withdrawal at this time.'}), 400
+@app.route('/deposit', methods=['POST'])
+def deposit():
+    data = request.get_json()
+    value = data.get('value')
+    return atm_instance.deposit(value)
 
-    withdrawal_amount = min(value, total_money)
-    if withdrawal_amount % 20 == 0:
-        # Update the balance for the account
-        current_account.withdraw(withdrawal_amount)
-        # Update total money in the ATM
-        global total_money
-        total_money -= withdrawal_amount
-        return jsonify({'message': f'Withdrawal successful. Remaining balance: {total_money}'}), 200
-    else:
-        return jsonify({'message': 'Withdrawal amount must be a multiple of 20.'}), 400
+@app.route('/balance', methods=['GET'])
+def get_balance():
+    return atm_instance.balance()
+
+@app.route('/history', methods=['GET'])
+def get_history():
+    return atm_instance.history()
 
 if __name__ == '__main__':
+    # Load user accounts from CSV file
+    atm_instance.parse_user_accounts('user_accounts.csv')  # Replace with your actual CSV file name
     app.run(debug=True)

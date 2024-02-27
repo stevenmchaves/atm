@@ -1,6 +1,6 @@
 import datetime
 import logging
-from atm.account_history import AccountHistory
+from account_history import AccountHistory
 OVERDRAFT_FEE = 5
 
 logger = logging.getLogger(__name__)

@@ -1,7 +1,7 @@
 import logging
 from flask import jsonify
 import pandas as pd
-from atm.user_account import UserAccount
+from user_account import UserAccount
 
 logger = logging.getLogger(__name__)
 
@@ -36,8 +36,9 @@ class Atm:
         else:
             self.user_accounts[self.current_account.account_id] = self.current_account
             print('Account ' + self.current_account.account_id + ' logged out.')
+            tmp_account = self.current_account.account_id
             self.current_account = None
-            return jsonify({'message': f'Account {self.current_account.account_id} logged out.'}), 200
+            return jsonify({'message': f'Account {tmp_account} logged out.'}), 200
 
     def withdraw(self, value):
         if self.current_account == None:

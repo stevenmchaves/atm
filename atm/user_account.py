@@ -61,6 +61,5 @@ class UserAccount:
             for record in reversed(self.account_history):
                 logger.info(record)
                 print(record)
-                record += "\n"
-                records += record
+                records += str(record) + '\n'
             return records

@@ -84,7 +84,7 @@ class Atm:
         else:
             # Assuming you have a method to retrieve transaction history for the current account
             # Replace with your actual implementation
-            transaction_history = self.current_account.get_transaction_history()
+            transaction_history = self.current_account.history()
             return jsonify({'history': transaction_history}), 200
     
     def parse_user_accounts(self, file_name):

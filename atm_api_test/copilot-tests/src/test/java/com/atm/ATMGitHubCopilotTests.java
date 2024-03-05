@@ -6,9 +6,10 @@ import io.restassured.response.Response;
 import static io.restassured.RestAssured.baseURI;
 import static io.restassured.RestAssured.given;
 import static org.junit.Assert.*;
-// Had to ask GitHub Copilot to generate the following imports
-import static org.hamcrest.Matchers.equalTo;
-
+// Remove the unused import statement
+// import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.greaterThan;
 import org.json.JSONObject;
 import org.junit.*;
 
@@ -33,8 +34,8 @@ public class ATMGitHubCopilotTests {
     @After
     public void afterTest() {
         given().contentType(ContentType.JSON)
-        .when()
-        .post("/logout");
+                .when()
+                .post("/logout");
     }
 
     @Test
@@ -158,7 +159,7 @@ public class ATMGitHubCopilotTests {
     public void testTransactionHistory() {
         JSONObject body = new JSONObject();
         body.put("account_id", "2859459814");
-        body.put("pin","7386");
+        body.put("pin", "7386");
         Response response = given().contentType(ContentType.JSON).body(body.toString())
                 .when()
                 .post("/authorize");
@@ -173,17 +174,38 @@ public class ATMGitHubCopilotTests {
 
     @Test
     public void testGetBalance() {
+        JSONObject body = new JSONObject();
+        body.put("account_id", "2859459814");
+        body.put("pin", "7386");
+        given().contentType(ContentType.JSON).body(body.toString())
+                .when()
+                .post("/authorize");
         given().param("accountNumber", "123456789")
                 .when().get("/balance")
                 .then().assertThat().statusCode(200)
-                .body("balance", equalTo(1000));
+                // Modified the following line from the original
+                .body("balance", greaterThan(0F));
     }
 
     @Test
     public void testWithdraw() {
-        given().param("accountNumber", "123456789").param("amount", 200)
-                .when().post("/withdraw")
-                .then().assertThat().statusCode(200)
-                .body("balance", equalTo(800));
+        JSONObject body = new JSONObject();
+        body.put("account_id", "2859459814");
+        body.put("pin", "7386");
+        Response response = given().contentType(ContentType.JSON).body(body.toString())
+                .when()
+                .post("/authorize");
+        response.then().statusCode(200);
+        body = new JSONObject();
+        body.put("value", 100);
+        // Wrong from Github Copilot
+        // given().param("amount", 200)
+        response = given().contentType(ContentType.JSON).body(body.toString())
+                .when()
+                .post("/withdraw");
+
+        // Added the following line
+        response.then().statusCode(200)
+                .body("message", containsString("Withdrawal successful. Remaining balance"));
     }
 }

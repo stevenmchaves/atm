@@ -1,0 +1,48 @@
+swagger: '2.0'
+info:
+  version: '1.0.0'
+  title: ATM Server API
+paths:
+  /authorize:
+    post:
+      summary: Authorizes a user
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              account_id:
+                type: string
+              pin:
+                type: string
+      responses:
+        '200':
+          description: Successful authorization
+  /logout:
+    post:
+      summary: Logs out a user
+      responses:
+        '200':
+          description: Successful logout
+  /withdraw:
+    post:
+      summary: Withdraws money from the account
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              value:
+                type: integer
+      responses:
+        '200':
+          description: Successful withdrawal
+          schema:
+            type: object
+            properties:
+              balance:
+                type: integer
